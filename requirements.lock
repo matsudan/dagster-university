@@ -127,6 +127,7 @@ multidict==6.0.5
 numpy==1.26.4
     # via geopandas
     # via pandas
+    # via pyarrow
     # via shapely
 packaging==24.0
     # via dagster
@@ -150,6 +151,8 @@ prompt-toolkit==3.0.36
 protobuf==4.25.3
     # via dagster
     # via grpcio-health-checking
+pyarrow==16.1.0
+    # via dagster-university
 pycparser==2.22
     # via cffi
 pydantic==2.7.2
