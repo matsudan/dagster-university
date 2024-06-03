@@ -9,7 +9,7 @@ import duckdb
 import os
 
 
-@asset(partitions_def=monthly_partition)
+@asset(partitions_def=monthly_partition, group_name="raw_files")
 def taxi_trips_file(context: AssetExecutionContext) -> None:
     """
     The raw parquet files for the taxi trips dataset. Sourced from the NYC Open Data portal.
@@ -28,7 +28,7 @@ def taxi_trips_file(context: AssetExecutionContext) -> None:
         output_file.write(raw_trips.content)
 
 
-@asset
+@asset(group_name="raw_files")
 def taxi_zones_file() -> None:
     """
     The raw parquet files for the taxi zone dataset. Sourced from the NYC Open Data portal.
@@ -41,7 +41,9 @@ def taxi_zones_file() -> None:
         output_file.write(raw_taxi_zones.content)
 
 
-@asset(deps=["taxi_trips_file"], partitions_def=monthly_partition)
+@asset(
+    deps=["taxi_trips_file"], partitions_def=monthly_partition, group_name="ingested"
+)
 def taxi_trips(context: AssetExecutionContext, database: DuckDBResource) -> None:
     """
     The raw taxi trips dataset, loaded into a DuckDB database
@@ -88,7 +90,7 @@ def taxi_trips(context: AssetExecutionContext, database: DuckDBResource) -> None
         conn.execute(sql_query)
 
 
-@asset(deps=["taxi_zones_file"])
+@asset(deps=["taxi_zones_file"], group_name="ingested")
 def taxi_zones(database: DuckDBResource) -> None:
     """
     The raw taxi zones dataset, loaded into a DuckDB database
