@@ -42,7 +42,7 @@ def taxi_zones_file() -> None:
 
 
 @asset(deps=["taxi_trips_file"], partitions_def=monthly_partition)
-def taxi_trips(database: DuckDBResource) -> None:
+def taxi_trips(context: AssetExecutionContext, database: DuckDBResource) -> None:
     """
     The raw taxi trips dataset, loaded into a DuckDB database
     """
